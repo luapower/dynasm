@@ -10,7 +10,7 @@
 local _info = {
   name =	"DynASM",
   description =	"A dynamic assembler for code generation engines",
-  version =	"1.4.0",
+  version =	"1.4.0_luamode",
   vernum =	 10400,
   release =	"2015-10-18",
   author =	"Mike Pall",
