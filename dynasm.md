@@ -303,7 +303,6 @@ As for the user-facing changes, the list is again small:
 ## Assembler tutorials & ref docs
 
   * [x64 tutorial](https://software.intel.com/en-us/articles/introduction-to-x64-assembly/)
-  * [SSE tutorial](http://neilkemp.us/src/sse_tutorial/sse_tutorial.html)
   * [SSE quick ref](http://softpixel.com/~cwright/programming/simd/sse.php)
   * [FPU tutorial & ref](http://www.website.masmforum.com/tutorials/fptute/index.html)
   * [Agner Fog - Calling Conventions](http://www.agner.org/optimize/calling_conventions.pdf)
