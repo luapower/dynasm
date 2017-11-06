@@ -10,8 +10,8 @@ and linker to be used as Lua modules.
 
 Jump To: [Examples](#examples) | [DynASM API](#dynasm-api) | [DASM API](#dasm-api) |
 			[Changes to DynASM](#changes-to-dynasm) |
-			[List of Instructions](http://corsix.github.io/dynasm-doc/instructions.html) |
-			[List of Directives](http://corsix.github.io/dynasm-doc/reference.html#directives)
+			[Instructions](http://corsix.github.io/dynasm-doc/instructions.html) |
+			[Directives](http://corsix.github.io/dynasm-doc/reference.html#directives)
 
 ## Features
 
