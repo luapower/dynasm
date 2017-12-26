@@ -248,7 +248,7 @@ __hi-level__
 	`[externget],` \												-> `func(externname) -> addr`, for solving `extern`s \
 	`[globals]) -> state, globals`							-> `void*[DASM_MAXGLOBAL]`, to hold globals
 
-`state:build() -> buf, size`									check, link, alloc, encode and mprotect the code
+`state:build([alloc[, protect]]) -> buf, size`			check, link, alloc, encode and mprotect the code
 
 `dasm.dump(buf, size)`											dump the code using the included disassembler in luajit
 

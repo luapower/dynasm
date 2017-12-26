@@ -35,13 +35,34 @@ local function run_demo(name)
 	local gencode = demo[name]
 
 	--make a new dasm state
-	local state, globals = dasm.new(actions, externnames, DASM_MAXSECTION, DASM_MAXGLOBAL)
+	local state, globals = dasm.new(actions, externnames,
+		DASM_MAXSECTION, DASM_MAXGLOBAL)
 
 	--generate the code and get the test function for that code
 	local runcode = gencode(state)
 
+	local use_mmap = true
+	local alloc, protect, free
+
+	if use_mmap then
+		local mmap = require'mmap'
+		local map
+		function alloc(sz)
+			map = assert(mmap.map{size = sz, access = 'wx'})
+			return map.addr
+		end
+		function protect(buf, sz)
+			--TODO
+		end
+		function free()
+			map:free()
+		end
+	else
+		function free() end
+	end
+
 	--build the code
-	local buf, size = state:build()
+	local buf, size = state:build(alloc, protect)
 
 	--show code and size
 	printf('%-16s %-10s %s', 'code address', '', tostring(buf))
@@ -62,6 +83,8 @@ local function run_demo(name)
 	if runcode then
 		runcode(buf)
 	end
+
+	free()
 end
 
 --run all demos

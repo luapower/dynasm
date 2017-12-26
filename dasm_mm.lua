@@ -12,7 +12,8 @@ local function checknz(ret) assert(ret ~= 0) end
 
 local new, free, protect
 
---Using VirtualAlloc allows memory protection, but can only allocate memory in multiple-of-64K chunks.
+--Using VirtualAlloc allows memory protection, but can only allocate memory
+--in multiple-of-64K chunks.
 local USE_VIRTUALALLOC = false
 
 if ffi.os == 'Windows' then
@@ -32,7 +33,8 @@ if ffi.os == 'Windows' then
 		local MEM_RELEASE = 0x8000
 
 		function new(size)
-			return checkh(C.VirtualAlloc(nil, size, bit.bor(MEM_RESERVE, MEM_COMMIT), PAGE_READWRITE))
+			return checkh(C.VirtualAlloc(nil, size,
+				bit.bor(MEM_RESERVE, MEM_COMMIT), PAGE_READWRITE))
 		end
 
 		function protect(addr, size)
@@ -52,7 +54,8 @@ if ffi.os == 'Windows' then
 		local HEAP_CREATE_ENABLE_EXECUTE = 0x00040000
 
 		ffi.cdef[[
-		void* HeapCreate(uint32_t flOptions, size_t dwInitialSize, size_t dwMaximumSize);
+		void* HeapCreate(uint32_t flOptions, size_t dwInitialSize,
+			size_t dwMaximumSize);
 		void* HeapAlloc(void* hHeap, uint32_t dwFlags, size_t dwBytes);
 		int HeapFree(void* hHeap, uint32_t dwFlags, void* lpMem);
 		]]
@@ -60,7 +63,8 @@ if ffi.os == 'Windows' then
 		local heap
 
 		function new(size)
-			heap = heap or checkh(C.HeapCreate(bit.bor(HEAP_NO_SERIALIZE, HEAP_CREATE_ENABLE_EXECUTE), 0, 0))
+			heap = heap or checkh(C.HeapCreate(
+				bit.bor(HEAP_NO_SERIALIZE, HEAP_CREATE_ENABLE_EXECUTE), 0, 0))
 			return checkh(C.HeapAlloc(heap, HEAP_ZERO_MEMORY, size))
 		end
 
@@ -82,7 +86,8 @@ elseif ffi.os == 'Linux' or ffi.os == 'BSD' or ffi.os == 'OSX' then
 	end
 
 	ffi.cdef[[
-	void* mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+	void* mmap(void *addr, size_t length, int prot, int flags,
+		int fd, off_t offset);
 	int munmap(void *addr, size_t length);
 	int mprotect(void *addr, size_t len, int prot);
 	]]
@@ -94,7 +99,11 @@ elseif ffi.os == 'Linux' or ffi.os == 'BSD' or ffi.os == 'OSX' then
 	local MAP_ANON = ffi.os == 'Linux' and 0x20 or 0x1000
 
 	function new(size)
-		local ret = C.mmap(nil, size, bit.bor(PROT_READ, PROT_WRITE), bit.bor(MAP_PRIVATE, MAP_ANON), -1, 0)
+		local ret = C.mmap(
+			nil, size,
+			bit.bor(PROT_READ, PROT_WRITE),
+			bit.bor(MAP_PRIVATE, MAP_ANON),
+			-1, 0)
 		if ffi.cast('intptr_t', ret) == ffi.cast('intptr_t', -1) then
 			error(string.format('mmap errno: %d', ffi.errno()))
 		end

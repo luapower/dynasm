@@ -206,14 +206,21 @@ function M.new(actionlist, externnames, sectioncount, globalcount, externget, gl
 	return state, globals
 end
 
-function M.build(state)
+function M.build(state, alloc, protect)
 	state:checkstep(-1)
 	local sz = state:link()
 	if sz == 0 then err'no code?' end
-	local mm = require'dasm_mm' --runtime dependency
-	local buf = mm.new(sz)
+	local buf
+	if alloc then
+		buf = alloc(sz)
+		protect = protect or function() end
+	else
+		local mm = require'dasm_mm' --runtime dependency
+		buf = mm.new(sz)
+		protect = mm.protect
+	end
 	state:encode(buf)
-	mm.protect(buf, sz)
+	protect(buf, sz)
 	return buf, sz
 end
 
